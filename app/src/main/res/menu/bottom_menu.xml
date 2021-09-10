@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:iconTint="@color/white"
+        android:id="@+id/alarmFragment"
+        android:title="Alarm"
+        android:icon="@drawable/ic_alarm"
+        />
+    <item
+        android:iconTint="@color/white"
+        android:id="@+id/stopWatchFragment"
+        android:title="Stopwatch"
+        android:icon="@drawable/ic_stopwatch"/>
+    <item
+        android:iconTint="@color/white"
+        android:id="@+id/timerFragment"
+        android:title="Timer"
+        android:icon="@drawable/ic_timer"/>
+</menu>
