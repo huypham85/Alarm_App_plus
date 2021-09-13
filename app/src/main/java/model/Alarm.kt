@@ -4,26 +4,32 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import broadcastReceiver.AlarmReceiver
 import java.util.*
 
+@Entity(tableName = "alarm_table")
 data class Alarm(
-        var hour:Int,
-        var minute: Int,
-        var recurring: Boolean,
-        var monday: Boolean,
-        var tuesday: Boolean,
-        var wednesday: Boolean,
-        var thursday: Boolean,
-        var friday: Boolean,
-        var saturday: Boolean,
-        var sunday: Boolean,
-        var label: String,
-        var id: Int, // dung de danh dau bao thuc => huy bao thuc dua vao id
-        var isOn: Boolean // de set trang thai cho switch
+    var hour:Int,
+    var minute: Int,
+    var recurring: Boolean,
+    var monday: Boolean,
+    var tuesday: Boolean,
+    var wednesday: Boolean,
+    var thursday: Boolean,
+    var friday: Boolean,
+    var saturday: Boolean,
+    var sunday: Boolean,
+    var label: String,
+    var isOn: Boolean, // de set trang thai cho switch
+    var timeCreated: Long, // dung de ghi lai thoi gian tao bao thuc, dung de sort trong db
+    @PrimaryKey var id: Int
 ){
-    public fun schedule(context: Context){ // ham nay dung de tao bao thuc (core function)
-
+     // dung de danh dau bao thuc => huy bao thuc dua vao id
+    fun schedule(context: Context){ // ham nay dung de tao bao thuc (core function)
+        Log.e("ALarm", "schedule")
         // dung alarmManager de gui 1 broadcast tu he thong alarm cua dien thoai
         var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -53,6 +59,8 @@ data class Alarm(
         if(calendar.timeInMillis <= System.currentTimeMillis()){
             calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1)
         }
+
+        // tao bao thuc tren dien thoai
         if(!recurring){
             alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
@@ -69,15 +77,15 @@ data class Alarm(
                     pendingIntent
             )
         }
+         Log.e("Thread schedule", Thread.currentThread().name)
     }
-    public fun cancelAlarm(context: Context){
+    fun cancelAlarm(context: Context){
         var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context,id,intent,0)
         alarmManager.cancel(pendingIntent)
-
     }
-    public fun getRecurringDays():String{
+    fun getRecurringDays():String{
         if(!recurring){
             return ""
         }

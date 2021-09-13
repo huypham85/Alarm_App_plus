@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="fragments.AddAlarmFragment"
     android:background="@color/white"
+    android:id="@+id/addAlarmLayout"
     >
 
     <TextView
@@ -40,6 +41,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="348dp"
         android:amPmTextColor="@color/white"
+        android:amPmBackgroundColor="@color/white"
+        android:numbersBackgroundColor="@color/white"
+        android:numbersSelectorColor="@color/white"
+        android:headerBackground="@color/white"
         android:timePickerMode="spinner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,59 +73,92 @@
         android:id="@+id/recurLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/checkRecur"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="10dp"
-        android:visibility="gone"
-        android:weightSum="7">
+        android:weightSum="12"
+        android:gravity="center"
+        android:padding="20dp"
+        android:background="@color/black"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/btnDoneRecur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:layout_gravity="right"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:layout_marginBottom="70dp"
+            />
 
         <CheckBox
             android:id="@+id/checkMon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mon"
-            android:layout_weight="1"/>
+            android:text="Monday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
 
         <CheckBox
             android:id="@+id/checkTue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tue"
+            android:text="Tuesday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
         <CheckBox
             android:id="@+id/checkWed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wed"
+            android:text="Wednesday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
         <CheckBox
             android:id="@+id/checkThu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thu"
+            android:text="Thursday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
         <CheckBox
             android:id="@+id/checkFri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fri"
+            android:text="Friday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
         <CheckBox
             android:id="@+id/checkSat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sat"
+            android:text="Saturday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
         <CheckBox
             android:id="@+id/checkSun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sun"
+            android:text="Sunday"
+            android:textSize="20dp"
+            android:textColor="@color/white"
             android:layout_weight="1"/>
 
     </LinearLayout>

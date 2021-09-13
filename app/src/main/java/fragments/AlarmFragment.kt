@@ -10,24 +10,40 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import adapters.AlarmListAdapter
+import android.app.Application
+import android.util.Log
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import com.example.alarmapp.R
+import com.example.alarmapp.databinding.AlarmItemBinding
 import com.example.alarmapp.databinding.FragmentAlarmBinding
+import model.Alarm
+import model.AlarmDatabase
+import model.AlarmRepository
 import viewModel.AlarmListViewModel
 
 class AlarmFragment : Fragment() {
     private lateinit var alarmAdapter: AlarmListAdapter
     private lateinit var binding: FragmentAlarmBinding
-    private lateinit var alarmListViewModel: AlarmListViewModel
+    private lateinit var itemBinding: AlarmItemBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
+    //View model
+    private val alarmListViewModel:AlarmListViewModel by viewModels{
+        var alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
+        var alarmRepository = AlarmRepository(alarmDao)
+        object : ViewModelProvider.Factory{
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentAlarmBinding.inflate(inflater,container,false)
+        itemBinding = AlarmItemBinding.inflate(inflater,container,false)
         val view = binding.root
         binding.alarmToolbar.inflateMenu(R.menu.toolbar_menu)
         binding.alarmToolbar.setOnMenuItemClickListener{
@@ -38,20 +54,21 @@ class AlarmFragment : Fragment() {
             true
             if (it.itemId == R.id.editAlarm){
                 Toast.makeText(requireActivity(),"Edit",Toast.LENGTH_LONG).show()
+                itemBinding.btnDeleteAlarm.visibility = View.VISIBLE
             }
             true
         }
-        //view model
-        alarmListViewModel = ViewModelProvider(requireActivity()).get(AlarmListViewModel::class.java)
         //adapter
         alarmAdapter = AlarmListAdapter {
             //callback o day de co the lay dc context truyen vao ham cancel va ham schedule
             if (it.isOn) {
                 context?.let { it1 -> it.cancelAlarm(it1) }
-            }
-            else{
+                alarmListViewModel.update(alarm = it)
+            } else {
                 context?.let { it1 -> it.schedule(it1) }
+                alarmListViewModel.update(alarm = it)
             }
+            //alarmAdapter.listAlarm = alarmListViewModel.listAlarm
         }
         return view
     }
@@ -64,7 +81,8 @@ class AlarmFragment : Fragment() {
         recyclerView.adapter = alarmAdapter
 
         alarmListViewModel.liveListAlarm.observe(viewLifecycleOwner, Observer {
-            if (it != null) alarmAdapter.listAlarm = it
+            Log.e("AlarmFragment", "observe")
+            alarmAdapter.listAlarm = it
         })
     }
 

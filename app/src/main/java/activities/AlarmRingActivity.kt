@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.alarmapp.databinding.ActivityAlarmRingBinding
+import fragments.AddAlarmFragment
 import model.Alarm
 import service.AlarmService
+import viewModel.AlarmListViewModel
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -43,8 +45,9 @@ class AlarmRingActivity : AppCompatActivity() {
                     saturday = false,
                     sunday = false,
                     label = "Snooze",
-                    id = ThreadLocalRandom.current().nextInt(),
-                    isOn = true
+                    isOn = true,
+                    System.currentTimeMillis(),
+                    AlarmListViewModel.index++
             )
             newAlarm.schedule(applicationContext) // tao 1 bao thuc moi vao 10 phut sau
 

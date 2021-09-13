@@ -8,26 +8,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import model.Alarm
 import com.example.alarmapp.R
 import com.example.alarmapp.databinding.FragmentAddAlarmBinding
+import model.AlarmDatabase
+import model.AlarmRepository
 import viewModel.AlarmListViewModel
-import java.util.concurrent.ThreadLocalRandom
 
+@Suppress("UNCHECKED_CAST")
 class AddAlarmFragment : Fragment() {
+
     private lateinit var binding: FragmentAddAlarmBinding
-    private lateinit var alarmListViewModel: AlarmListViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
+    private val alarmListViewModel:AlarmListViewModel by viewModels{
+        val alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
+        val alarmRepository = AlarmRepository(alarmDao)
+        object : ViewModelProvider.Factory{
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
+        }
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         binding = FragmentAddAlarmBinding.inflate(inflater,container,false)
-        alarmListViewModel = ViewModelProvider(requireActivity()).get(AlarmListViewModel::class.java)
         return binding.root
     }
 
@@ -41,13 +50,22 @@ class AddAlarmFragment : Fragment() {
         binding.checkRecur.setOnCheckedChangeListener{ _: CompoundButton, isChecked: Boolean ->
             if(isChecked){
                 binding.recurLayout.visibility = View.VISIBLE
+                binding.btnDoneRecur.setOnClickListener {
+                    binding.recurLayout.visibility = View.GONE
+                    binding.txtSave.visibility = View.VISIBLE
+                    binding.txtCancel.visibility = View.VISIBLE
+                }
+                binding.txtSave.visibility = View.GONE
+                binding.txtCancel.visibility = View.GONE
             }
             else{
                 binding.recurLayout.visibility = View.GONE
+
             }
         }
         binding.txtCancel.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_addAlarmFragment_to_alarmFragment)
+
         }
     }
     private fun createAlarm(){
@@ -62,14 +80,16 @@ class AddAlarmFragment : Fragment() {
                 binding.checkSat.isChecked,
                 binding.checkSun.isChecked,
                 binding.edtAlarmLabel.text.toString(),
-                ThreadLocalRandom.current().nextInt(),
-                true
+                true,
+                System.currentTimeMillis(),
+                AlarmListViewModel.index++
         )
-        alarmListViewModel.addAlarm(alarm)
+        alarmListViewModel.insert(alarm)
         Log.e("Random ID",alarm.id.toString())
         val hour: Int = binding.timePicker.hour
         val minute: Int = binding.timePicker.minute
         Toast.makeText(requireActivity(), "$hour : $minute", Toast.LENGTH_LONG).show()
         context?.let { alarm.schedule(it) }
+
     }
 }
