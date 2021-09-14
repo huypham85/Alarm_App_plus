@@ -53,7 +53,8 @@ class AlarmListViewModel(private val alarmRepository: AlarmRepository):ViewModel
         liveListAlarm.postValue(listAlarm)
         Log.e("list size", listAlarm.size.toString())
         Log.e("list db size", alarmRepository.liveDataAlarms.value?.size.toString())
-        Log.e("id viewmodel",alarm.id.toString())
+        Log.e("id viewModel",alarm.id.toString())
+        Log.e("live list size", liveListAlarm.value?.size.toString())
     }
     fun update(alarm: Alarm){
         alarmRepository.update(alarm)

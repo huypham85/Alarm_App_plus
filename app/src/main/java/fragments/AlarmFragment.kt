@@ -54,7 +54,6 @@ class AlarmFragment : Fragment() {
             true
             if (it.itemId == R.id.editAlarm){
                 Toast.makeText(requireActivity(),"Edit",Toast.LENGTH_LONG).show()
-                itemBinding.btnDeleteAlarm.visibility = View.VISIBLE
             }
             true
         }
