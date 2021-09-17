@@ -31,10 +31,8 @@ class AlarmFragment : Fragment() {
     }
     //View model
     private val alarmListViewModel:AlarmListViewModel by viewModels{
-        var alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
-        var alarmRepository = AlarmRepository(alarmDao)
         object : ViewModelProvider.Factory{
-            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = activity?.application?.let { AlarmListViewModel(it) } as T
         }
     }
     override fun onCreateView(
@@ -76,13 +74,15 @@ class AlarmFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //set up recycler view
         val recyclerView:RecyclerView = binding.rcvAlarm
+
+        alarmListViewModel.listAlarmLiveData.observe(viewLifecycleOwner, {
+            alarmAdapter.listAlarm = it
+//            alarmAdapter.notifyDataSetChanged()
+            //Log.d("check", "current list ${it.size}")
+        })
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = alarmAdapter
-
-        alarmListViewModel.liveListAlarm.observe(viewLifecycleOwner, Observer {
-            Log.e("AlarmFragment", "observe")
-            alarmAdapter.listAlarm = it
-        })
     }
 
 }

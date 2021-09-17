@@ -26,13 +26,20 @@ class AddAlarmFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+//    private val alarmListViewModel:AlarmListViewModel by viewModels{
+//        val alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
+//        val alarmRepository = AlarmRepository(alarmDao)
+//        object : ViewModelProvider.Factory{
+//            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
+//        }
+//    }
+
     private val alarmListViewModel:AlarmListViewModel by viewModels{
-        val alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
-        val alarmRepository = AlarmRepository(alarmDao)
         object : ViewModelProvider.Factory{
-            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = activity?.application?.let { AlarmListViewModel(it) } as T
         }
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -82,7 +89,6 @@ class AddAlarmFragment : Fragment() {
                 binding.edtAlarmLabel.text.toString(),
                 true,
                 System.currentTimeMillis(),
-                AlarmListViewModel.index++
         )
         alarmListViewModel.insert(alarm)
         Log.e("Random ID",alarm.id.toString())

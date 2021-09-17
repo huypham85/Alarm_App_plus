@@ -25,7 +25,7 @@ data class Alarm(
     var label: String,
     var isOn: Boolean, // de set trang thai cho switch
     var timeCreated: Long, // dung de ghi lai thoi gian tao bao thuc, dung de sort trong db
-    @PrimaryKey var id: Int
+    @PrimaryKey(autoGenerate = true) var id: Int? = null
 ){
      // dung de danh dau bao thuc => huy bao thuc dua vao id
     fun schedule(context: Context){ // ham nay dung de tao bao thuc (core function)
@@ -47,7 +47,7 @@ data class Alarm(
         intent.putExtra("SUNDAY",sunday)
         intent.putExtra("LABEL",label)
 
-        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+        val pendingIntent = id?.let { PendingIntent.getBroadcast(context, it, intent, 0) };
 
         // lay thoi tu time picker
         var calendar = Calendar.getInstance()
@@ -62,6 +62,7 @@ data class Alarm(
 
         // tao bao thuc tren dien thoai
         if(!recurring){
+            Log.e("Alarm", "!recurring")
             alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
@@ -78,12 +79,14 @@ data class Alarm(
             )
         }
          Log.e("Thread schedule", Thread.currentThread().name)
+         this.isOn = true
     }
     fun cancelAlarm(context: Context){
         var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context,id,intent,0)
+        val pendingIntent = id?.let { PendingIntent.getBroadcast(context, it,intent,0) }
         alarmManager.cancel(pendingIntent)
+        this.isOn = false
     }
     fun getRecurringDays():String{
         if(!recurring){

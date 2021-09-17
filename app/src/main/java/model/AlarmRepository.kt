@@ -8,18 +8,20 @@ import androidx.lifecycle.MutableLiveData
 import kotlin.concurrent.thread
 
 class AlarmRepository(private var alarmDao: AlarmDao) {
-    var liveDataAlarms: LiveData<List<Alarm>> = alarmDao.getAlarms()
-    fun insert(alarm: Alarm){
-        thread {
-            alarmDao.insertAlarm(alarm)
-        }
-        AlarmDatabase.databaseWriteExecutor.execute {
-            Log.e("Alarm Repo","insert")
-        }
+
+    /**
+     * fun getBookMarkWithViolationId(id: Int) : LiveData<Bookmark> = bookmarkDao.getBookmarkWithId(id)
+     *
+     * */
+
+   // suspend fun getData() : LiveData<List<Alarm>> = alarmDao.getAlarms()
+
+    var getAlarms: LiveData<List<Alarm>> = alarmDao.getAlarms()
+
+    suspend fun insert(alarm: Alarm){
+        alarmDao.insertAlarm(alarm)
     }
-    fun update(alarm: Alarm){
-        AlarmDatabase.databaseWriteExecutor.execute {
-            alarmDao.updateAlarm(alarm)
-        }
+    suspend fun update(alarm: Alarm){
+        alarmDao.updateAlarm(alarm)
     }
 }

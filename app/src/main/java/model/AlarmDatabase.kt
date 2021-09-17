@@ -7,12 +7,10 @@ import androidx.room.RoomDatabase
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-@Database(entities = [Alarm::class], version = 3, exportSchema = false)
+@Database(entities = [Alarm::class], version = 4, exportSchema = false)
 abstract class AlarmDatabase : RoomDatabase(){
     abstract fun alarmDao() : AlarmDao
     companion object{
-        private const val NUMBER_OF_THREADS = 4
-        val databaseWriteExecutor : ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
         @Volatile
         private var instance: AlarmDatabase? = null
         // singleton
@@ -29,19 +27,6 @@ abstract class AlarmDatabase : RoomDatabase(){
                     "alarm_database.db"
             ).fallbackToDestructiveMigration().build()
         }
-//            synchronized(this) {
-//                var instance = INSTANCE
-//                if (instance == null) {
-//                    instance = Room.databaseBuilder(
-//                            context.applicationContext,
-//                            AlarmDatabase::class.java,
-//                            "alarm_database"
-//                    )
-//                            .build()
-//                    INSTANCE = instance
-//                }
-//                return instance
-//            }
     }
 
 }

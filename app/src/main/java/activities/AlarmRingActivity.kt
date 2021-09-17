@@ -31,7 +31,7 @@ class AlarmRingActivity : AppCompatActivity() {
             // khi snooze, alarm se tat vao luc do va lap lai bao thuc sau 10p, => tao 1 bao thuc moi sau 10p
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()
-            calendar.add(Calendar.MINUTE, 10)
+            calendar.add(Calendar.MINUTE, 2)
 
             val newAlarm = Alarm(
                     calendar.get(Calendar.HOUR_OF_DAY),
@@ -46,8 +46,8 @@ class AlarmRingActivity : AppCompatActivity() {
                     sunday = false,
                     label = "Snooze",
                     isOn = true,
-                    System.currentTimeMillis(),
-                    AlarmListViewModel.index++
+                    System.currentTimeMillis()
+//                    AlarmListViewModel.index++
             )
             newAlarm.schedule(applicationContext) // tao 1 bao thuc moi vao 10 phut sau
 

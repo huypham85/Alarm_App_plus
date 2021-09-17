@@ -1,33 +1,27 @@
 package fragments
 
+import android.content.Intent
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.alarmapp.R
+import com.example.alarmapp.databinding.FragmentTimerBinding
+import service.TimerService
+import viewModel.TimerViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [TimerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class TimerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private lateinit var binding: FragmentTimerBinding
+    lateinit var timerViewModel: TimerViewModel
+    private var isActive = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -35,26 +29,83 @@ class TimerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_timer, container, false)
+        binding = FragmentTimerBinding.inflate(layoutInflater,container,false)
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TimerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TimerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.timerToolbar.inflateMenu(R.menu.timer_menu)
+        binding.timePicker.setIs24HourView(true)
+        binding.timePicker.hour = 0
+        binding.timePicker.minute = 0
+
+//        val intent = Intent(context,TimerService::class.java)
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            context?.startForegroundService(intent)
+//        }
+//        else{
+//            context?.startService(intent)
+//        }
+
+        timerViewModel = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+        timerViewModel.timeLeft.observe(viewLifecycleOwner, {
+            binding.txtTime.text = it
+            binding.progressBar.progress = (timerViewModel.timerLength - timerViewModel.time).toInt() // set the progressbar
+            Log.e("progress", "${binding.progressBar.progress}")
+        })
+        timerViewModel.timeOut.observe(viewLifecycleOwner, {
+            if (it){
+                resetTimer()
+                isActive = false
             }
+        })
+//        if(timerViewModel.timeOut.value == true){
+//            resetTimer()
+//            binding.progressBar.progress = 0
+//        }
+
+        binding.btnStart.setOnClickListener {
+            isActive = true
+            binding.btnStart.isEnabled = false
+            binding.btnPause.isEnabled = true
+            binding.btnStop.isEnabled = true
+            binding.timePicker.visibility = View.GONE
+            binding.timeLeftLayout.visibility = View.VISIBLE
+            val hour = binding.timePicker.hour
+            val minute = binding.timePicker.minute
+            binding.progressBar.max = timerViewModel.setTimeProgress(0,minute,hour).toInt()
+            timerViewModel.setNewTime(0,minute,hour)
+            timerViewModel.startTimer()
+        }
+        binding.btnPause.setOnClickListener {
+            if(isActive){
+                timerViewModel.finishTimer()
+                binding.btnPause.text = "Resume"
+                isActive = false
+            }
+            else{
+                timerViewModel.startTimer()
+                isActive = true
+                binding.btnPause.text = "Pause"
+            }
+        }
+        binding.btnStop.setOnClickListener {
+            isActive = false
+            resetTimer()
+            timerViewModel.finishTimer()
+        }
+    }
+
+    private fun resetTimer() {
+        binding.timePicker.hour = 0
+        binding.timePicker.minute = 0
+        binding.btnPause.isEnabled = false
+        binding.btnStop.isEnabled = false
+        binding.btnStart.isEnabled = true
+        binding.btnPause.text = "Pause"
+        binding.timePicker.visibility = View.VISIBLE
+        binding.timeLeftLayout.visibility = View.GONE
     }
 }
