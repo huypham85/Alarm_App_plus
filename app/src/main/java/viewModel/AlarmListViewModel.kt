@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import model.Alarm
 import model.AlarmDatabase
@@ -12,13 +13,18 @@ import model.AlarmRepository
 import java.util.concurrent.ThreadLocalRandom
 
 class AlarmListViewModel(application: Application):ViewModel() {
-    private var alarmRepository: AlarmRepository
-    var listAlarmLiveData : LiveData<List<Alarm>> = MutableLiveData()
+
+    private val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
+    private var alarmRepository: AlarmRepository = AlarmRepository(alarmDao)
+    var listAlarmLiveData : LiveData<List<Alarm>> = liveData {
+        emitSource(alarmRepository.getAlarms)
+    }
 
     init {
-        val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
-        alarmRepository = AlarmRepository(alarmDao)
-        listAlarmLiveData = alarmRepository.getAlarms
+
+//        val listPeopleUI : LiveData<List<PeopleUI>> = liveData {
+//            emitSource(peopleRepository.getAllPeople())
+//        }
         val newAlarm = Alarm(
             9,
             30,
@@ -34,7 +40,10 @@ class AlarmListViewModel(application: Application):ViewModel() {
             isOn = false,
             System.currentTimeMillis(),
         )
-        insert(alarm = newAlarm)
+        viewModelScope.launch(IO){
+            insert(alarm = newAlarm)
+        }
+
     }
 
 //    companion object{
@@ -47,11 +56,12 @@ class AlarmListViewModel(application: Application):ViewModel() {
 //            return INSTANCE!!
 //        }
 //    }
-    fun insert(alarm: Alarm){
+    suspend fun insert(alarm: Alarm){
         Log.e("View model", "insert")
         viewModelScope.launch(Dispatchers.IO){
             alarmRepository.insert(alarm)
-        }
+        }.join()
+        listAlarmLiveData = alarmRepository.getAlarms
         Log.e("list after insert", "${listAlarmLiveData.value?.size}")
 //        Log.e("list size", listAlarm.size.toString())
 //        Log.e("list db size", alarmRepository.liveDataAlarms.value?.size.toString())

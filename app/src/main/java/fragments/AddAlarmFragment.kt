@@ -11,10 +11,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import model.Alarm
 import com.example.alarmapp.R
 import com.example.alarmapp.databinding.FragmentAddAlarmBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import model.AlarmDatabase
 import model.AlarmRepository
 import viewModel.AlarmListViewModel
@@ -90,7 +93,10 @@ class AddAlarmFragment : Fragment() {
                 true,
                 System.currentTimeMillis(),
         )
-        alarmListViewModel.insert(alarm)
+        lifecycleScope.launch(Dispatchers.IO) {
+            alarmListViewModel.insert(alarm)
+        }
+
         Log.e("Random ID",alarm.id.toString())
         val hour: Int = binding.timePicker.hour
         val minute: Int = binding.timePicker.minute
