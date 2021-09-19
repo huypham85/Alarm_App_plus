@@ -25,24 +25,24 @@ class AlarmListViewModel(application: Application):ViewModel() {
 //        val listPeopleUI : LiveData<List<PeopleUI>> = liveData {
 //            emitSource(peopleRepository.getAllPeople())
 //        }
-        val newAlarm = Alarm(
-            9,
-            30,
-            recurring = false,
-            monday = false,
-            tuesday = false,
-            wednesday = false,
-            thursday = false,
-            friday = false,
-            saturday = false,
-            sunday = false,
-            label = "Alarm",
-            isOn = false,
-            System.currentTimeMillis(),
-        )
-        viewModelScope.launch(IO){
-            insert(alarm = newAlarm)
-        }
+//        val newAlarm = Alarm(
+//            9,
+//            30,
+//            recurring = false,
+//            monday = false,
+//            tuesday = false,
+//            wednesday = false,
+//            thursday = false,
+//            friday = false,
+//            saturday = false,
+//            sunday = false,
+//            label = "Alarm",
+//            isOn = false,
+//            System.currentTimeMillis(),
+//        )
+//        viewModelScope.launch(IO){
+//            insert(alarm = newAlarm)
+//        }
 
     }
 

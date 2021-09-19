@@ -25,25 +25,27 @@ import viewModel.AlarmListViewModel
 class AlarmFragment : Fragment() {
     private lateinit var alarmAdapter: AlarmListAdapter
     private lateinit var binding: FragmentAlarmBinding
-    private lateinit var itemBinding: AlarmItemBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-    //View model
     private val alarmListViewModel:AlarmListViewModel by viewModels{
         object : ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T = activity?.application?.let { AlarmListViewModel(it) } as T
         }
     }
+    //View model
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentAlarmBinding.inflate(inflater,container,false)
-        itemBinding = AlarmItemBinding.inflate(inflater,container,false)
-        val view = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.alarmToolbar.inflateMenu(R.menu.toolbar_menu)
+
         binding.alarmToolbar.setOnMenuItemClickListener{
             if (it.itemId == R.id.addAlarm){
                 Toast.makeText(requireActivity(),"Add",Toast.LENGTH_LONG).show()
@@ -55,7 +57,7 @@ class AlarmFragment : Fragment() {
             }
             true
         }
-        //adapter
+
         alarmAdapter = AlarmListAdapter {
             //callback o day de co the lay dc context truyen vao ham cancel va ham schedule
             if (it.isOn) {
@@ -67,22 +69,21 @@ class AlarmFragment : Fragment() {
             }
             //alarmAdapter.listAlarm = alarmListViewModel.listAlarm
         }
-        return view
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //set up recycler view
-        val recyclerView:RecyclerView = binding.rcvAlarm
 
         alarmListViewModel.listAlarmLiveData.observe(viewLifecycleOwner, {
             alarmAdapter.listAlarm = it
-//            alarmAdapter.notifyDataSetChanged()
-            //Log.d("check", "current list ${it.size}")
+            alarmAdapter.notifyDataSetChanged()
+
+            Log.d("check", "current list ${it.size}")
         })
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = alarmAdapter
+        //set up recycler view
+        val recyclerView:RecyclerView = binding.rcvAlarm
+        recyclerView.apply {
+            adapter = alarmAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
     }
 
 }
