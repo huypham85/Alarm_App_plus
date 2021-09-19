@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.alarmapp.databinding.AlarmItemBinding
 import model.Alarm
 
-class AlarmListAdapter(val onToggle:(Alarm)->Unit): RecyclerView.Adapter<AlarmListAdapter.ViewHolder>() {
+class AlarmListAdapter(val onToggle:(Alarm)->Unit): RecyclerView.Adapter<AlarmListAdapter.AlarmViewHolder>() {
+    private  lateinit var binding : AlarmItemBinding
     var listAlarm: List<Alarm> = mutableListOf()
 
-    inner class ViewHolder(private val binding:AlarmItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class AlarmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         @SuppressLint("SetTextI18n")
         fun bind(alarm: Alarm){
             with(binding){
@@ -26,11 +27,13 @@ class AlarmListAdapter(val onToggle:(Alarm)->Unit): RecyclerView.Adapter<AlarmLi
                 itemAlarmSwitch.isChecked = alarm.isOn
             }
         }
+
         fun setOnToggle(alarm: Alarm){
             binding.itemAlarmSwitch.setOnCheckedChangeListener { _: CompoundButton, _: Boolean ->
                 onToggle(alarm)
             }
         }
+
         fun setOnEdit(alarm: Alarm){
             if (binding.btnDeleteAlarm.visibility == View.VISIBLE){
                 binding.btnDeleteAlarm.setOnClickListener {
@@ -43,19 +46,22 @@ class AlarmListAdapter(val onToggle:(Alarm)->Unit): RecyclerView.Adapter<AlarmLi
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(AlarmItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
+        binding = AlarmItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return AlarmViewHolder(binding.root)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AlarmListAdapter.AlarmViewHolder, position: Int) {
         val alarm = listAlarm[position]
-        holder.bind(alarm)
-        holder.setOnToggle(listAlarm[position])
-        holder.setOnEdit(listAlarm[position])
+
+        holder.apply {
+            bind(alarm)
+            setOnEdit(alarm)
+            setOnToggle(alarm)
+        }
     }
 
     override fun getItemCount(): Int {
-        return listAlarm.size
+        return  listAlarm.size
     }
-
 }
