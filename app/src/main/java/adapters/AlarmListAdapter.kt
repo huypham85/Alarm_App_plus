@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.alarmapp.databinding.AlarmItemBinding
 import model.Alarm
+import viewModel.AlarmListViewModel
 
-class AlarmListAdapter(val onToggle:(Alarm)->Unit): RecyclerView.Adapter<AlarmListAdapter.AlarmViewHolder>() {
+class AlarmListAdapter(val onToggle:(Alarm)->Unit, var viewModel: AlarmListViewModel): RecyclerView.Adapter<AlarmListAdapter.AlarmViewHolder>() {
     var listAlarm: List<Alarm> = mutableListOf()
     private lateinit var binding:AlarmItemBinding
 

@@ -46,16 +46,6 @@ class AlarmListViewModel(application: Application):ViewModel() {
 
     }
 
-//    companion object{
-//        var index =3
-//        private var INSTANCE: AlarmListViewModel? = null
-//        fun getInstance(repository: AlarmRepository): AlarmListViewModel {
-//            if(INSTANCE == null){
-//                INSTANCE = AlarmListViewModel(repository)
-//            }
-//            return INSTANCE!!
-//        }
-//    }
     suspend fun insert(alarm: Alarm){
         Log.e("View model", "insert")
         viewModelScope.launch(Dispatchers.IO){

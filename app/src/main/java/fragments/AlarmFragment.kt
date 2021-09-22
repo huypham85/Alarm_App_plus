@@ -67,7 +67,6 @@ class AlarmFragment : Fragment() {
                 context?.let { it1 -> it.schedule(it1) }
                 alarmListViewModel.update(alarm = it)
             }
-            //alarmAdapter.listAlarm = alarmListViewModel.listAlarm
         }
 
 

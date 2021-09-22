@@ -29,13 +29,6 @@ class AddAlarmFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-//    private val alarmListViewModel:AlarmListViewModel by viewModels{
-//        val alarmDao = AlarmDatabase.getInstance(requireContext()).alarmDao()
-//        val alarmRepository = AlarmRepository(alarmDao)
-//        object : ViewModelProvider.Factory{
-//            override fun <T : ViewModel> create(modelClass: Class<T>): T = AlarmListViewModel.getInstance(alarmRepository) as T
-//        }
-//    }
 
     private val alarmListViewModel:AlarmListViewModel by viewModels{
         object : ViewModelProvider.Factory{

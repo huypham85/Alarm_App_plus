@@ -25,13 +25,13 @@ data class Alarm(
     var label: String,
     var isOn: Boolean, // de set trang thai cho switch
     var timeCreated: Long, // dung de ghi lai thoi gian tao bao thuc, dung de sort trong db
-    @PrimaryKey(autoGenerate = true) var id: Int? = null
+    @PrimaryKey(autoGenerate = true) var id: Int = 0  // dung de danh dau bao thuc => huy bao thuc dua vao id
 ){
-     // dung de danh dau bao thuc => huy bao thuc dua vao id
+
     fun schedule(context: Context){ // ham nay dung de tao bao thuc (core function)
         Log.e("ALarm", "schedule")
         // dung alarmManager de gui 1 broadcast tu he thong alarm cua dien thoai
-        var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         //khoi tao 1 intent de gui broadcast do den receiver va xu li trong do
         val intent= Intent(context, AlarmReceiver::class.java)
@@ -47,7 +47,7 @@ data class Alarm(
         intent.putExtra("SUNDAY",sunday)
         intent.putExtra("LABEL",label)
 
-        val pendingIntent = id?.let { PendingIntent.getBroadcast(context, it, intent, 0) };
+        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it, intent, 0) };
 
         // lay thoi tu time picker
         var calendar = Calendar.getInstance()
@@ -78,13 +78,13 @@ data class Alarm(
                     pendingIntent
             )
         }
-         Log.e("Thread schedule", Thread.currentThread().name)
-         this.isOn = true
+        Log.e("Thread schedule", Thread.currentThread().name)
+        this.isOn = true
     }
     fun cancelAlarm(context: Context){
         var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = id?.let { PendingIntent.getBroadcast(context, it,intent,0) }
+        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it,intent,0) }
         alarmManager.cancel(pendingIntent)
         this.isOn = false
     }

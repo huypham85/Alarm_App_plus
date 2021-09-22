@@ -66,4 +66,7 @@ dependencies {
 
     //preference
     implementation 'androidx.preference:preference-ktx:1.1.1'
+
+    // swipe rcv
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 }

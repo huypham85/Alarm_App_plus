@@ -24,4 +24,7 @@ class AlarmRepository(private var alarmDao: AlarmDao) {
     suspend fun update(alarm: Alarm){
         alarmDao.updateAlarm(alarm)
     }
+    suspend fun delete(alarm: Alarm){
+        alarmDao.deleteAlarm(alarm)
+    }
 }
