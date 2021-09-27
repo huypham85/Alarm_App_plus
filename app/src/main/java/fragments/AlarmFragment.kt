@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import adapters.AlarmListAdapter
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.alarmapp.R
 import com.example.alarmapp.databinding.AlarmItemBinding
 import com.example.alarmapp.databinding.FragmentAlarmBinding
@@ -52,22 +54,19 @@ class AlarmFragment : Fragment() {
                 Navigation.findNavController(view).navigate(R.id.action_alarmFragment_to_addAlarmFragment)
             }
             true
-            if (it.itemId == R.id.editAlarm){
-                Toast.makeText(requireActivity(),"Edit",Toast.LENGTH_LONG).show()
-            }
-            true
         }
 
-        alarmAdapter = AlarmListAdapter {
+        alarmAdapter = AlarmListAdapter ({
             //callback o day de co the lay dc context truyen vao ham cancel va ham schedule
             if (it.isOn) {
-                context?.let { it1 -> it.cancelAlarm(it1) }
+                activity?.let { it1 -> it.cancelAlarm(it1 as Context) }
+                Log.e("On toggle", "On->Off")
                 alarmListViewModel.update(alarm = it)
             } else {
-                context?.let { it1 -> it.schedule(it1) }
+                activity?.let { it1 -> it.schedule(it1 as Context) }
+                Log.e("On toggle", "Off->On")
                 alarmListViewModel.update(alarm = it)
-            }
-        }
+            }},alarmListViewModel, activity!!)
 
 
         alarmListViewModel.listAlarmLiveData.observe(viewLifecycleOwner, {
@@ -78,10 +77,13 @@ class AlarmFragment : Fragment() {
         })
 
         //set up recycler view
+        var itemDecoration = DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL)
+        //itemDecoration.setDrawable(context.getDrawable(R.drawable.line_divider))
         val recyclerView:RecyclerView = binding.rcvAlarm
         recyclerView.apply {
             adapter = alarmAdapter
             layoutManager = LinearLayoutManager(context)
+            this.addItemDecoration(itemDecoration)
         }
     }
 

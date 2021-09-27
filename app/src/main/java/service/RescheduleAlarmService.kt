@@ -22,15 +22,15 @@ class RescheduleAlarmService : Service(), LifecycleOwner {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        var alarmDao = AlarmDatabase.getInstance(applicationContext).alarmDao()
-        var alarmRepository = AlarmRepository(alarmDao)
-        alarmRepository.getAlarms.observe(this, Observer {
-            for(alarm: Alarm in it){
-                if(alarm.isOn){
-                    alarm.schedule(applicationContext)
-                }
-            }
-        })
+//        var alarmDao = AlarmDatabase.getInstance(applicationContext).alarmDao()
+//        var alarmRepository = AlarmRepository(alarmDao)
+//        alarmRepository.getAlarms.observe(this, Observer {
+//            for(alarm: Alarm in it){
+//                if(alarm.isOn){
+//                    alarm.schedule(applicationContext)
+//                }
+//            }
+//        })
         return START_STICKY
     }
 

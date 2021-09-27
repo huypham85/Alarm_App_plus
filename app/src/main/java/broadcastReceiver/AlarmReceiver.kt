@@ -24,6 +24,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 startAlarmService(context,intent)
             }
             else{
+                Log.e("receiver", "repeat")
                 if(todayHasAlarm(intent)){ // neu co bao thuc trong ngay thi moi start service (dung cho truong hop bao thuc lap lai nhieu ngay)
                     startAlarmService(context,intent)
                 }
@@ -35,6 +36,7 @@ class AlarmReceiver : BroadcastReceiver() {
         var calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
         var today:Int = calendar.get(Calendar.DAY_OF_WEEK)
+        Log.e("today on receiver", today.toString())
         when(today){
             Calendar.MONDAY -> {
                 if(intent.getBooleanExtra("MONDAY",false)) return true
@@ -81,8 +83,14 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun startAlarmService(context: Context, intent: Intent){
         var intentService = Intent(context, AlarmService::class.java)
         intentService.putExtra("LABEL", intent.getStringExtra("LABEL"))
+        intent.getStringExtra("LABEL")?.let { Log.e("label Receiver", it) }
+
         intentService.putExtra("HOUR",intent.getIntExtra("HOUR",0))
+        Log.e("Hour Receiver", intent.getIntExtra("HOUR",0).toString())
+
         intentService.putExtra("MINUTE",intent.getIntExtra("MINUTE",0))
+        Log.e("Minute Receiver", intent.getIntExtra("MINUTE",0).toString())
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             context.startForegroundService(intentService)
         }

@@ -8,6 +8,7 @@ import android.os.Build
 class AppNoti: Application() {
     companion object{
         const val CHANNEL_ID = "ALARM CHANNEL"
+        //const val CHANNEL_ID2 = "TIMER CHANNEL"
     }
     override fun onCreate() {
         super.onCreate()

@@ -25,7 +25,7 @@ data class Alarm(
     var label: String,
     var isOn: Boolean, // de set trang thai cho switch
     var timeCreated: Long, // dung de ghi lai thoi gian tao bao thuc, dung de sort trong db
-    @PrimaryKey(autoGenerate = true) var id: Int = 0  // dung de danh dau bao thuc => huy bao thuc dua vao id
+    @PrimaryKey var id: Long  // dung de danh dau bao thuc => huy bao thuc dua vao id
 ){
 
     fun schedule(context: Context){ // ham nay dung de tao bao thuc (core function)
@@ -47,13 +47,14 @@ data class Alarm(
         intent.putExtra("SUNDAY",sunday)
         intent.putExtra("LABEL",label)
 
-        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it, intent, 0) };
+        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it.toInt(), intent, 0) };
 
         // lay thoi tu time picker
         var calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis();
         calendar.set(Calendar.HOUR_OF_DAY,hour)
         calendar.set(Calendar.MINUTE,minute)
+        calendar.set(Calendar.SECOND,0)
 
         // neu thoi gian hien tai lon hon thoi gian dat bao thuc => tang ngay len 1
         if(calendar.timeInMillis <= System.currentTimeMillis()){
@@ -70,6 +71,7 @@ data class Alarm(
             )
         }
         else{
+            Log.e("Alarm", "repeat")
             val daily: Long = 24*60*60*1000
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -78,13 +80,19 @@ data class Alarm(
                     pendingIntent
             )
         }
-        Log.e("Thread schedule", Thread.currentThread().name)
+        Log.e("id schedule", id.toString())
+        Log.e("schedule pending intent", pendingIntent.toString())
+        //Log.e("Thread schedule", Thread.currentThread().name)
+        Log.e("Schedule Alarm context", context.toString())
         this.isOn = true
     }
     fun cancelAlarm(context: Context){
         var alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it,intent,0) }
+        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it.toInt(),intent,0) }
+        Log.e("cancel pending intent", pendingIntent.toString())
+        Log.e("id cancel", id.toString())
+        Log.e("Cancel Alarm context", context.toString())
         alarmManager.cancel(pendingIntent)
         this.isOn = false
     }

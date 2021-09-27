@@ -32,6 +32,7 @@
 
         <service android:name="service.AlarmService" />
         <service android:name="service.RescheduleAlarmService" />
+        <service android:name="service.TimerService"/>
     </application>
 
 </manifest>

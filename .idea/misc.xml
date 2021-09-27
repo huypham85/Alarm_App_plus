@@ -3,11 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/drawable/line_divider.xml" value="0.1875" />
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/layout/alarm_item.xml" value="0.136" />
         <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/layout/fragment_add_alarm.xml" value="0.2" />
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/layout/fragment_alarm.xml" value="0.259375" />
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/menu/timer_menu.xml" value="0.19739583333333333" />
+        <entry key="..\:/Java/Android Projects/Alarm_App_plus/app/src/main/res/menu/toolbar_menu.xml" value="0.19739583333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="15" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="15" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

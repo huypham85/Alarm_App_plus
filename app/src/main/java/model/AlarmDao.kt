@@ -18,4 +18,5 @@ interface AlarmDao {
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
+
 }

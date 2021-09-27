@@ -1,5 +1,6 @@
 package fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,8 +19,6 @@ import com.example.alarmapp.R
 import com.example.alarmapp.databinding.FragmentAddAlarmBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import model.AlarmDatabase
-import model.AlarmRepository
 import viewModel.AlarmListViewModel
 
 @Suppress("UNCHECKED_CAST")
@@ -85,6 +84,7 @@ class AddAlarmFragment : Fragment() {
                 binding.edtAlarmLabel.text.toString(),
                 true,
                 System.currentTimeMillis(),
+                System.currentTimeMillis()
         )
         lifecycleScope.launch(Dispatchers.IO) {
             alarmListViewModel.insert(alarm)
@@ -94,7 +94,8 @@ class AddAlarmFragment : Fragment() {
         val hour: Int = binding.timePicker.hour
         val minute: Int = binding.timePicker.minute
         Toast.makeText(requireActivity(), "$hour : $minute", Toast.LENGTH_LONG).show()
-        context?.let { alarm.schedule(it) }
+        activity?.let { alarm.schedule(it as Context) }
+        Log.e("Add alarm context", activity.toString())
 
     }
 }

@@ -12,6 +12,7 @@ import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import activities.AlarmRingActivity
+import android.util.Log
 import notifications.AppNoti.Companion.CHANNEL_ID
 import com.example.alarmapp.R
 
@@ -33,10 +34,16 @@ class AlarmService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val notiIntent = Intent(this, AlarmRingActivity::class.java) // goi den class AlarmRing
+
         val alarmLabel: String? = intent.getStringExtra("LABEL") //label of notification
         notiIntent.putExtra("HOUR", intent.getIntExtra("HOUR",0))
         notiIntent.putExtra("MINUTE", intent.getIntExtra("MINUTE",0))
         notiIntent.putExtra("LABEL",alarmLabel)
+
+        Log.e("Hour Service", intent.getIntExtra("HOUR",0).toString())
+        Log.e("Minute Service", intent.getIntExtra("MINUTE",0).toString())
+        intent.getStringExtra("LABEL")?.let { Log.e("Label service", it) }
+
         val pendingIntent = PendingIntent.getActivity(this,0,notiIntent,0) // dung de goi 1 ung dung ben ngoai(thong bao cua dien thoai)
 
 

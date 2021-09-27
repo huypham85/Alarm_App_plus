@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import model.Alarm
 import model.AlarmDatabase
@@ -16,9 +18,12 @@ class AlarmListViewModel(application: Application):ViewModel() {
 
     private val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
     private var alarmRepository: AlarmRepository = AlarmRepository(alarmDao)
-    var listAlarmLiveData : LiveData<List<Alarm>> = liveData {
-        emitSource(alarmRepository.getAlarms)
-    }
+//    var listAlarmLiveData : LiveData<List<Alarm>> = liveData(IO) {
+//        //delay(3000)
+////        alarmRepository.getAlarms.value?.let { emit(it) }
+//        emit(alarmRepository.getAlarms())
+//    }
+    var listAlarmLiveData : LiveData<List<Alarm>> = alarmRepository.getAlarms
 
     init {
 
@@ -51,8 +56,7 @@ class AlarmListViewModel(application: Application):ViewModel() {
         viewModelScope.launch(Dispatchers.IO){
             alarmRepository.insert(alarm)
         }.join()
-        listAlarmLiveData = alarmRepository.getAlarms
-        Log.e("list after insert", "${listAlarmLiveData.value?.size}")
+        //Log.e("list after insert", "${listAlarmLiveData.value?.size}")
 //        Log.e("list size", listAlarm.size.toString())
 //        Log.e("list db size", alarmRepository.liveDataAlarms.value?.size.toString())
 //        Log.e("id viewModel",alarm.id.toString())
@@ -61,6 +65,14 @@ class AlarmListViewModel(application: Application):ViewModel() {
     fun update(alarm: Alarm){
         viewModelScope.launch(Dispatchers.IO){
             alarmRepository.update(alarm)
+        }
+
+    }
+
+    fun delete(alarm: Alarm) {
+        viewModelScope.launch(Dispatchers.IO) {
+            alarmRepository.delete(alarm)
+            //listAlarmLiveData.value  = alarmRepository.getAlarms()
         }
 
     }

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-@Database(entities = [Alarm::class], version = 5, exportSchema = false)
+@Database(entities = [Alarm::class], version = 6, exportSchema = false)
 abstract class AlarmDatabase : RoomDatabase(){
     abstract fun alarmDao() : AlarmDao
     companion object{
