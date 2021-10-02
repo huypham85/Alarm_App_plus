@@ -13,16 +13,21 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import activities.AlarmRingActivity
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import notifications.AppNoti.Companion.CHANNEL_ID
 import com.example.alarmapp.R
 
 class AlarmService : Service() {
     private lateinit var mediaPlayer: MediaPlayer // nhac bao thuc
     private lateinit var vibrator: Vibrator // rung cho bao thuc
+
+    companion object{
+        const val ALARM = "alarmText"
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer.create(this, R.raw.alarm)
@@ -34,17 +39,18 @@ class AlarmService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val notiIntent = Intent(this, AlarmRingActivity::class.java) // goi den class AlarmRing
-
+//        notiIntent.action = ALARM // dung de send broadcast
         val alarmLabel: String? = intent.getStringExtra("LABEL") //label of notification
         notiIntent.putExtra("HOUR", intent.getIntExtra("HOUR",0))
         notiIntent.putExtra("MINUTE", intent.getIntExtra("MINUTE",0))
         notiIntent.putExtra("LABEL",alarmLabel)
+        notiIntent.putExtra("ID",intent.getLongExtra("ID",0))
 
         Log.e("Hour Service", intent.getIntExtra("HOUR",0).toString())
         Log.e("Minute Service", intent.getIntExtra("MINUTE",0).toString())
         intent.getStringExtra("LABEL")?.let { Log.e("Label service", it) }
 
-        val pendingIntent = PendingIntent.getActivity(this,0,notiIntent,0) // dung de goi 1 ung dung ben ngoai(thong bao cua dien thoai)
+        val pendingIntent = PendingIntent.getActivity(this,0,notiIntent,PendingIntent.FLAG_UPDATE_CURRENT) // dung de goi 1 ung dung ben ngoai(thong bao cua dien thoai)
 
 
         val notification = NotificationCompat.Builder(this,CHANNEL_ID)

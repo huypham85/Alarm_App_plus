@@ -69,4 +69,7 @@ dependencies {
 
     // swipe rcv
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
+    //lottie
+    implementation 'com.airbnb.android:lottie:4.1.0'
 }

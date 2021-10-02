@@ -11,6 +11,19 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:timePickerStyle">@style/myTimePickerStyle</item>
+        <item name="android:listDivider">@color/white</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="myTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <!--        <item name="android:numbersTextColor">@color/white</item>-->
+        <!--        <item name="android:numbersBackgroundColor">@color/white</item>-->
+        <!--        <item name="android:numbersSelectorColor">#88000000</item>-->
+        <!--        <item name="android:headerBackground">@color/white</item>-->
+        <item name="android:timePickerMode">spinner</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>

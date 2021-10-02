@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import adapters.AlarmListAdapter
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -78,7 +79,7 @@ class AlarmFragment : Fragment() {
 
         //set up recycler view
         var itemDecoration = DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL)
-        //itemDecoration.setDrawable(context.getDrawable(R.drawable.line_divider))
+        itemDecoration.setDrawable(ColorDrawable(R.color.white))
         val recyclerView:RecyclerView = binding.rcvAlarm
         recyclerView.apply {
             adapter = alarmAdapter

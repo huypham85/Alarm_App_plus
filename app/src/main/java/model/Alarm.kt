@@ -46,7 +46,7 @@ data class Alarm(
         intent.putExtra("SATURDAY",saturday)
         intent.putExtra("SUNDAY",sunday)
         intent.putExtra("LABEL",label)
-
+        intent.putExtra("ID",id)
         val pendingIntent = id.let { PendingIntent.getBroadcast(context, it.toInt(), intent, 0) };
 
         // lay thoi tu time picker

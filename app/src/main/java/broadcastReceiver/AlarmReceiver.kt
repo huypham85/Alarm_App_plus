@@ -6,9 +6,12 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import model.AlarmDatabase
+import model.AlarmRepository
 import service.AlarmService
 import service.RescheduleAlarmService
 import java.util.*
+import kotlin.coroutines.coroutineContext
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -83,13 +86,9 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun startAlarmService(context: Context, intent: Intent){
         var intentService = Intent(context, AlarmService::class.java)
         intentService.putExtra("LABEL", intent.getStringExtra("LABEL"))
-        intent.getStringExtra("LABEL")?.let { Log.e("label Receiver", it) }
-
         intentService.putExtra("HOUR",intent.getIntExtra("HOUR",0))
-        Log.e("Hour Receiver", intent.getIntExtra("HOUR",0).toString())
-
         intentService.putExtra("MINUTE",intent.getIntExtra("MINUTE",0))
-        Log.e("Minute Receiver", intent.getIntExtra("MINUTE",0).toString())
+        intentService.putExtra("ID",intent.getLongExtra("ID",0))
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             context.startForegroundService(intentService)

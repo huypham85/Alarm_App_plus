@@ -1,18 +1,13 @@
 package viewModel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import model.Alarm
 import model.AlarmDatabase
 import model.AlarmRepository
-import java.util.concurrent.ThreadLocalRandom
 
 class AlarmListViewModel(application: Application):ViewModel() {
 

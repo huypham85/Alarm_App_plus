@@ -1,28 +1,35 @@
 package service
 
+import activities.MainActivity
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.AsyncPlayer
+import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.alarmapp.R
 import fragments.TimerFragment
 import notifications.AppNoti
-import notifications.AppNoti.Companion.CHANNEL_ID
+import notifications.AppNoti.Companion.CHANNEL_ID2
 
 class TimerService : Service() {
 
+
     private lateinit var countDownTimer:CountDownTimer
     var intentService = Intent(COUNTDOWN)
+    private lateinit var mediaPlayer: MediaPlayer
 
 
     companion object{
         const val COUNTDOWN = "backgroundtimer"
         const val TIME_OUT = "time_out"
+        const val STOP = "stop_service"
     }
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -30,12 +37,21 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        mediaPlayer = MediaPlayer.create(this, R.raw.timer)
+        mediaPlayer.isLooping = true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.e("Timer service", "On start command")
-        startTimer(intent)
+        if (STOP == intent?.action){
+            stopForeground(true);
+            stopSelf();
+        }
+        else{
+            Log.e("Timer service", "On start command")
+            startTimer(intent)
+        }
+
 
         return START_STICKY
     }
@@ -52,27 +68,45 @@ class TimerService : Service() {
             override fun onFinish() {
                 val intentTimeOut = Intent(TIME_OUT)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intentTimeOut)
-                stopSelf()
+                //stopSelf()
             }
 
         }.start()
     }
 
     private fun sendNotification(time: Long){
-        val intent = Intent(this, TimerFragment::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        if(time>0){
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID2)
+                .setContentTitle("Timer is running")
+                .setContentText(updateNotification(time))
+                .setSmallIcon(R.drawable.ic_timer)
+                .setContentIntent(pendingIntent)
+                .setSound(null)
+                .build()
+            startForeground(2,notification)
+        }
+        else{
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Timer is running")
-            .setContentText(updateNotification(time))
-            .setSmallIcon(R.drawable.ic_timer)
-            .setContentIntent(pendingIntent)
-            .build()
-        startForeground(1,notification)
+            mediaPlayer.start()
+
+            val remoteViews = RemoteViews(packageName,R.layout.custom_noti)
+            val closeIntent = Intent(this, TimerService::class.java)
+            closeIntent.action = STOP
+            val pIntent = PendingIntent.getService(this, 0,closeIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+            remoteViews.setOnClickPendingIntent(R.id.btnStopTimer,pIntent)
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID2)
+                .setSmallIcon(R.drawable.ic_timer)
+                .setContentIntent(pendingIntent)
+                .setCustomContentView(remoteViews)
+                .setSound(null)
+                .build()
+            startForeground(2,notification)
+        }
     }
 
     private fun updateNotification(time : Long) : String{
-        Log.e("Update UI Timer", "On")
         val hour = time/3600
         val minute = time/60%60
         val second = time%60
@@ -88,7 +122,9 @@ class TimerService : Service() {
 //    }
 
     override fun onDestroy() {
-        countDownTimer.cancel()
         super.onDestroy()
+        mediaPlayer.stop()
+        countDownTimer.cancel()
+
     }
 }

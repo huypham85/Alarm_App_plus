@@ -19,7 +19,7 @@ import service.TimerService
 class TimerFragment : Fragment() {
     private lateinit var binding: FragmentTimerBinding
     //lateinit var timerViewModel: TimerViewModel
-    private var isActive:Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -40,46 +40,64 @@ class TimerFragment : Fragment() {
         binding.timerToolbar.inflateMenu(R.menu.timer_menu)
         binding.timePicker.setIs24HourView(true)
 
-//        val filter = IntentFilter(TimerService.COUNTDOWN)
-//        fil
-
-        var sharedPreferences = this.activity?.getSharedPreferences("pref",MODE_PRIVATE)
-        var timeLeft = sharedPreferences?.getLong("time left",0)
+        //set up timer khi bat lai app
+        val sharedPreferences = this.activity?.getSharedPreferences("pref",MODE_PRIVATE)
+        val timeLeft = sharedPreferences?.getLong("time left",0)
+        val lastActive = sharedPreferences?.getBoolean("active",false)
+        var isActive = false
+        Log.e("Time left", timeLeft.toString())
+        Log.e("Last active",lastActive.toString())
+        // cac truong hop khi mo lai app
         if (timeLeft != null) {
-            if(timeLeft >= 1) {
+            Log.e("Here", "alo")
+            // khi tat app va timer van dang chay
+            if(timeLeft > 1  && lastActive == true) {
+                Log.e("sau khi bat lai app", lastActive.toString())
                 isActive = true
+                with(sharedPreferences?.edit()){
+                    this?.putBoolean("active",isActive)
+                    this?.apply()
+                }
                 binding.btnStart.isEnabled = false
                 binding.btnPause.isEnabled = true
                 binding.btnStop.isEnabled = true
                 binding.timePicker.visibility = View.GONE
                 binding.timeLeftLayout.visibility = View.VISIBLE
+                binding.progressBar.max = sharedPreferences.getInt("progress max", 0)
+                Log.e("max progress",binding.progressBar.max.toString() )
                 val hour = timeLeft/3600
                 val minute = timeLeft/60%60
                 val second = timeLeft%60
                 binding.txtTime.text = (String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second))
                 LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, IntentFilter(TimerService.COUNTDOWN))
             }
-            else{
+            // khi pause timer va tat app
+            else if(timeLeft > 1  && lastActive == false){
+                Log.e("sau khi bat lai app", lastActive.toString())
+                binding.btnPause.text = "Resume"
+                binding.btnStart.isEnabled = false
+                binding.btnPause.isEnabled = true
+                binding.btnStop.isEnabled = true
+                isActive = false
+                with(sharedPreferences?.edit()){
+                    this?.putBoolean("active",isActive)
+                    this?.apply()
+                }
+                binding.timePicker.visibility = View.GONE
+                binding.timeLeftLayout.visibility = View.VISIBLE
+                val hour = timeLeft/3600
+                val minute = timeLeft/60%60
+                val second = timeLeft%60
+                binding.txtTime.text = (String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second))
+                binding.progressBar.max = sharedPreferences.getInt("progress max", 0)
+                binding.progressBar.progress = binding.progressBar.max - timeLeft.toInt()
+            }
+            // khi da het thoi gian
+            else if (timeLeft <=1){
                 Log.e("Reset timer","true")
                 resetTimer()
             }
         }
-
-
-
-        // view model
-        //timerViewModel = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
-//        timerService.timeLeft.observe(viewLifecycleOwner, {
-//            binding.txtTime.text = it
-//            binding.progressBar.progress = (timerService.timerLength - timerService.time).toInt() // set the progressbar
-//            Log.e("progress", "${binding.progressBar.progress}")
-//        })
-//        timerService.timeOut.observe(viewLifecycleOwner, {
-//            if (it){
-//                resetTimer()
-//                isActive = false
-//            }
-//        })
 
         binding.btnStart.setOnClickListener {
             isActive = true
@@ -92,30 +110,69 @@ class TimerFragment : Fragment() {
             val minute = binding.timePicker.minute
 
             binding.progressBar.max = setNewTime(0,minute,hour).toInt()
-//            timerService.setNewTime(0,minute,hour)
-
-            //timerService.startTimer()
+            with(sharedPreferences?.edit()){
+                this?.putInt("progress max",binding.progressBar.max)
+                this?.apply()
+            }
+            sharedPreferences?.edit()?.putBoolean("active", true)?.apply()
+            Log.e("active after start" , sharedPreferences?.getBoolean("active",false).toString())
             val intent = Intent(context, TimerService::class.java)
             intent.putExtra("New time", setNewTime(0,minute,hour))
             context?.startService(intent)
         }
-//        binding.btnPause.setOnClickListener {
-//            if(isActive){
-//                timerService.finishTimer()
-//                binding.btnPause.text = "Resume"
-//                isActive = false
-//            }
-//            else{
-//                timerService.startTimer()
-//                isActive = true
-//                binding.btnPause.text = "Pause"
-//            }
-//        }
-//        binding.btnStop.setOnClickListener {
-//            isActive = false
-//            resetTimer()
-//            timerService.finishTimer()
-//        }
+        binding.btnPause.setOnClickListener {
+            if(isActive){ // Pause
+                isActive = false
+                val intent = Intent(context, TimerService::class.java)
+                context?.stopService(intent)
+                binding.btnPause.text = "Resume"
+                binding.btnStart.isEnabled = false
+                with(sharedPreferences?.edit()){
+                    this?.putBoolean("active",false)
+                    this?.apply()
+                }
+            }
+            else{ // Resume
+                val timeLefAfterPause = sharedPreferences?.getLong("time left",0)
+                binding.progressBar.max = sharedPreferences?.getInt("progress max",0)!!
+                Log.e("max progress",binding.progressBar.max.toString() )
+                var hour =0
+                var minute =0
+                var second=0
+                if(timeLefAfterPause!=null){
+                    hour = (timeLefAfterPause/3600).toInt()
+                    minute = (timeLefAfterPause / 60 % 60).toInt()
+                    second = (timeLefAfterPause % 60).toInt()
+                }
+                val intent = Intent(context,TimerService::class.java)
+                intent.putExtra("New time",setNewTime(second,minute,hour))
+                context?.startService(intent)
+                binding.btnStart.isEnabled = false
+                isActive = true
+                binding.btnPause.text = "Pause"
+                with(sharedPreferences?.edit()){
+                    this?.putBoolean("active",true)
+                    this?.apply()
+                }
+            }
+        }
+        binding.btnStop.setOnClickListener {
+            //it.background = resources.getDrawable(R.drawable.start_round_button)
+
+            isActive = false
+            val intent = Intent(context, TimerService::class.java)
+            context?.stopService(intent)
+            with(sharedPreferences?.edit()){
+                this?.putLong("time left",0)
+                this?.apply()
+            }
+            with(sharedPreferences?.edit()){
+                this?.putBoolean("active",false)
+                this?.apply()
+            }
+            resetTimer()
+
+        }
     }
 
     override fun onResume() {

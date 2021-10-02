@@ -11,7 +11,7 @@ import model.Alarm
 import model.AlarmDatabase
 import model.AlarmRepository
 
-class RescheduleAlarmService : Service(), LifecycleOwner {
+class RescheduleAlarmService : Service(){
     override fun onBind(intent: Intent?): IBinder? {
         return null;
     }
@@ -22,20 +22,18 @@ class RescheduleAlarmService : Service(), LifecycleOwner {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-//        var alarmDao = AlarmDatabase.getInstance(applicationContext).alarmDao()
-//        var alarmRepository = AlarmRepository(alarmDao)
-//        alarmRepository.getAlarms.observe(this, Observer {
-//            for(alarm: Alarm in it){
-//                if(alarm.isOn){
-//                    alarm.schedule(applicationContext)
-//                }
-//            }
-//        })
+        var alarmDao = AlarmDatabase.getInstance(applicationContext).alarmDao()
+        var alarmRepository = AlarmRepository(alarmDao)
+        alarmRepository.getAlarms.value.let {
+            if (it != null) {
+                for(alarm: Alarm in it){
+                    if(alarm.isOn){
+                        alarm.schedule(applicationContext)
+                    }
+                }
+            }
+        }
         return START_STICKY
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        TODO("Not yet implemented")
     }
 
     override fun onDestroy() {

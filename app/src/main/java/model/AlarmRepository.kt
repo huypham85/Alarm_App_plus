@@ -23,4 +23,7 @@ class AlarmRepository(private var alarmDao: AlarmDao) {
     suspend fun delete(alarm: Alarm){
         alarmDao.deleteAlarm(alarm)
     }
+    fun getAlarmWithId(id : Long): Alarm {
+        return alarmDao.getAlarmWithId(id)
+    }
 }

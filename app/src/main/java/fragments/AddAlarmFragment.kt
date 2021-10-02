@@ -53,6 +53,11 @@ class AddAlarmFragment : Fragment() {
             if(isChecked){
                 binding.recurLayout.visibility = View.VISIBLE
                 binding.btnDoneRecur.setOnClickListener {
+                    with(binding){
+                        if(!this.checkMon.isChecked && !this.checkTue.isChecked && !this.checkWed.isChecked && !this.checkThu.isChecked && !this.checkFri.isChecked && !this.checkSat.isChecked && !this.checkSun.isChecked){
+                            this.checkRecur.isChecked = false
+                        }
+                    }
                     binding.recurLayout.visibility = View.GONE
                     binding.txtSave.visibility = View.VISIBLE
                     binding.txtCancel.visibility = View.VISIBLE

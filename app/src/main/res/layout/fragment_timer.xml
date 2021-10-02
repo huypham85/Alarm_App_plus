@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="fragments.TimerFragment"
-    android:background="@color/white">
+    android:background="@color/black">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/timerToolbar"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,46 +48,48 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintVertical_bias="0.35"
+            app:layout_constraintVertical_bias="0.45"
             android:text="00:00:00"
             android:textSize="60dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/white"/>
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/progressBar"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:minWidth="350dp"
-            android:minHeight="350dp"
+            android:minWidth="370dp"
+            android:minHeight="370dp"
             style="@style/Widget.MaterialProgressBar.ProgressBar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_bias="0.2"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/start_round_button"
         android:text="Start"
-        android:backgroundTint="#7DE306"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#8EF668"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.145"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintVertical_bias="0.7"
-        android:layout_marginTop="150dp"
-        />
-    <Button
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.699" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:text="Pause"
         android:enabled="false"
-        android:backgroundTint="@color/orange"
+        android:textColor="#E0EC21"
+        android:background="@drawable/pause_round_button"
         app:layout_constraintTop_toBottomOf="@id/timeLeftLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,13 +98,14 @@
         app:layout_constraintVertical_bias="0.7"
         android:layout_marginTop="150dp"
         />
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@id/btnStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:text="Stop"
         android:enabled="false"
-        android:backgroundTint="#E4024F"
+        android:textColor="#FDAF9B"
+        android:background ="@drawable/stop_round_button"
         app:layout_constraintTop_toBottomOf="@id/timeLeftLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

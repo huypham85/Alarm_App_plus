@@ -4,21 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="activities.AlarmRingActivity">
+    tools:context="activities.AlarmRingActivity"
+    android:background="@color/black"
+    >
+
     <TextView
         android:id="@+id/txtALarmTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ALARM!!!"
-        android:textSize="80dp"
         android:textAlignment="center"
-        android:textColor="@color/orange"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/orange"
+        android:textSize="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.3"/>
+        app:layout_constraintVertical_bias="0.299" />
+
     <TextView
         android:id="@+id/txtAlarmLabel"
         android:layout_width="wrap_content"
@@ -32,7 +36,7 @@
         app:layout_constraintVertical_bias="0.1"
         android:textSize="30dp"
         />
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,10 +45,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtAlarmLabel"
         android:layout_marginTop="70dp"
+        android:textColor="@color/white"
         app:layout_constraintHorizontal_bias="0.2"
-        android:backgroundTint="#F10000"/>
+        android:background ="@drawable/stop_round_button"
+        />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSnooze"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +58,8 @@
         app:layout_constraintTop_toBottomOf="@id/txtAlarmLabel"
         android:layout_marginTop="70dp"
         android:text="Snooze"
-        android:backgroundTint="#82F300"
+        android:textColor="@color/white"
+        android:background = "@drawable/start_round_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent" />
