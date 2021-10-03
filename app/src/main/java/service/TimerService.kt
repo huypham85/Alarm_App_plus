@@ -25,7 +25,7 @@ class TimerService : Service() {
     var intentService = Intent(COUNTDOWN)
     private lateinit var mediaPlayer: MediaPlayer
 
-
+    //use to filter intent
     companion object{
         const val COUNTDOWN = "backgroundtimer"
         const val TIME_OUT = "time_out"
@@ -77,7 +77,7 @@ class TimerService : Service() {
     private fun sendNotification(time: Long){
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
-        if(time>0){
+        if(time>0){ // neu van con thoi gian
             val notification = NotificationCompat.Builder(this, CHANNEL_ID2)
                 .setContentTitle("Timer is running")
                 .setContentText(updateNotification(time))
@@ -87,7 +87,7 @@ class TimerService : Service() {
                 .build()
             startForeground(2,notification)
         }
-        else{
+        else{ // khi het thoi gian thi se tao 1 thong bao khac, co chuong keu
 
             mediaPlayer.start()
 
@@ -106,7 +106,7 @@ class TimerService : Service() {
         }
     }
 
-    private fun updateNotification(time : Long) : String{
+    private fun updateNotification(time : Long) : String{  // update UI cho noti
         val hour = time/3600
         val minute = time/60%60
         val second = time%60

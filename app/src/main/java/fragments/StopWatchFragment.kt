@@ -43,9 +43,9 @@ class StopWatchFragment : Fragment() {
 
         val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
         val timeRunning = sharedPreferences?.getFloat("timeRunning", 0.0F)
-
+        val lastStarted = sharedPreferences?.getBoolean("started", false)
         Log.e("Time running",timeRunning.toString())
-        if (timeRunning != null) {
+        if (timeRunning != null && lastStarted == true) { // truoc khi tat app: time van chay va ko bi stop
             if(timeRunning > 0){
                 binding.txtTime.text = getTimeStringFromDouble(timeRunning.toDouble())
                 LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, IntentFilter(StopwatchService.TIMER_UPDATED))
@@ -117,6 +117,11 @@ class StopWatchFragment : Fragment() {
     }
 
     private fun startTimer() {
+        val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
+        with(sharedPreferences?.edit()){
+            this?.putBoolean("started",true)
+            this?.apply()
+        }
         serviceIntent.putExtra(StopwatchService.TIME_EXTRA, time)
         context?.startService(serviceIntent)
         binding.btnStart.text = "Stop"
@@ -126,6 +131,11 @@ class StopWatchFragment : Fragment() {
     }
 
     private fun stopTimer() {
+        val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
+        with(sharedPreferences?.edit()){
+            this?.putBoolean("started",false)
+            this?.apply()
+        }
         context?.stopService(serviceIntent)
         binding.btnStart.text = "Start"
         binding.btnStart.background = resources.getDrawable(R.drawable.start_round_button)
