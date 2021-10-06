@@ -18,32 +18,13 @@ class AlarmListViewModel(application: Application):ViewModel() {
 ////        alarmRepository.getAlarms.value?.let { emit(it) }
 //        emit(alarmRepository.getAlarms())
 //    }
-    var listAlarmLiveData : LiveData<List<Alarm>> = alarmRepository.getAlarms
+    private val listAlarms = MutableLiveData<List<Alarm>>()
+    var listAlarmLiveData : LiveData<List<Alarm>> = listAlarms
 
     init {
-
-//        val listPeopleUI : LiveData<List<PeopleUI>> = liveData {
-//            emitSource(peopleRepository.getAllPeople())
-//        }
-//        val newAlarm = Alarm(
-//            9,
-//            30,
-//            recurring = false,
-//            monday = false,
-//            tuesday = false,
-//            wednesday = false,
-//            thursday = false,
-//            friday = false,
-//            saturday = false,
-//            sunday = false,
-//            label = "Alarm",
-//            isOn = false,
-//            System.currentTimeMillis(),
-//        )
-//        viewModelScope.launch(IO){
-//            insert(alarm = newAlarm)
-//        }
-
+        viewModelScope.launch(Dispatchers.IO) {
+            listAlarms.postValue(alarmRepository.getAlarms())
+        }
     }
 
     suspend fun insert(alarm: Alarm){
@@ -69,6 +50,5 @@ class AlarmListViewModel(application: Application):ViewModel() {
             alarmRepository.delete(alarm)
             //listAlarmLiveData.value  = alarmRepository.getAlarms()
         }
-
     }
 }
