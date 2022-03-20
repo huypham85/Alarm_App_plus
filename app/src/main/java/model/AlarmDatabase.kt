@@ -4,17 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import java.util.concurrent.Executors
-import kotlin.coroutines.CoroutineContext
 
 @Database(entities = [Alarm::class], version = 6, exportSchema = false)
-abstract class AlarmDatabase : RoomDatabase(){
-    abstract fun alarmDao() : AlarmDao
-    companion object{
+abstract class AlarmDatabase : RoomDatabase() {
+    abstract fun alarmDao(): AlarmDao
+
+    companion object {
         @Volatile
         private var instance: AlarmDatabase? = null
+
         // singleton
-        fun getInstance(context:Context): AlarmDatabase {
+        fun getInstance(context: Context): AlarmDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
             }
@@ -22,9 +22,9 @@ abstract class AlarmDatabase : RoomDatabase(){
 
         private fun buildDatabase(context: Context): AlarmDatabase {
             return Room.databaseBuilder(
-                    context,
-                    AlarmDatabase::class.java,
-                    "alarm_database.db"
+                context,
+                AlarmDatabase::class.java,
+                "alarm_database.db"
             ).fallbackToDestructiveMigration().build()
         }
     }

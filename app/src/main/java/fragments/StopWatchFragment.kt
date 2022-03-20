@@ -7,15 +7,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.alarmapp.R
 import com.example.alarmapp.databinding.FragmentStopWatchBinding
-import com.example.alarmapp.databinding.FragmentTimerBinding
 import service.StopwatchService
 import kotlin.math.roundToInt
 
@@ -32,7 +30,7 @@ class StopWatchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentStopWatchBinding.inflate(layoutInflater,container,false)
+        binding = FragmentStopWatchBinding.inflate(layoutInflater, container, false)
 
         return binding.root
     }
@@ -44,18 +42,20 @@ class StopWatchFragment : Fragment() {
         val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
         val timeRunning = sharedPreferences?.getFloat("timeRunning", 0.0F)
         val lastStarted = sharedPreferences?.getBoolean("started", false)
-        Log.e("Time running",timeRunning.toString())
+        Log.e("Time running", timeRunning.toString())
         if (timeRunning != null && lastStarted == true) { // truoc khi tat app: time van chay va ko bi stop
-            if(timeRunning > 0){
+            if (timeRunning > 0) {
                 binding.txtTime.text = getTimeStringFromDouble(timeRunning.toDouble())
-                LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, IntentFilter(StopwatchService.TIMER_UPDATED))
-               // serviceIntent.putExtra(StopwatchService.TIME_EXTRA, time)
+                LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(
+                    broadcastReceiver,
+                    IntentFilter(StopwatchService.TIMER_UPDATED)
+                )
+                // serviceIntent.putExtra(StopwatchService.TIME_EXTRA, time)
                 binding.btnStart.text = "Stop"
                 binding.btnStart.background = resources.getDrawable(R.drawable.stop_round_button)
                 timerStarted = true
                 binding.btnReset.isEnabled = false
-            }
-            else{
+            } else {
                 time = 0.0
                 binding.txtTime.text = getTimeStringFromDouble(time)
             }
@@ -74,10 +74,11 @@ class StopWatchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, IntentFilter(StopwatchService.TIMER_UPDATED))
+        LocalBroadcastManager.getInstance(requireActivity())
+            .registerReceiver(broadcastReceiver, IntentFilter(StopwatchService.TIMER_UPDATED))
     }
 
-    private var broadcastReceiver= object : BroadcastReceiver() {
+    private var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             time = intent.getDoubleExtra(StopwatchService.TIME_EXTRA, 0.0)
             binding.txtTime.text = getTimeStringFromDouble(time)
@@ -89,8 +90,8 @@ class StopWatchFragment : Fragment() {
         stopTimer()
         time = 0.0
         binding.txtTime.text = getTimeStringFromDouble(time)
-        val sharedPreferences = this.activity?.getSharedPreferences("stopWatchPref",MODE_PRIVATE)
-        with(sharedPreferences?.edit()){
+        val sharedPreferences = this.activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
+        with(sharedPreferences?.edit()) {
             this?.putFloat("timeRunning", 0.0F)
             this?.apply()
         }
@@ -102,7 +103,7 @@ class StopWatchFragment : Fragment() {
         val seconds = resultInt / 100 % 60
         val minutes = resultInt / 100 / 60 % 60
 
-        return makeTimeString(minutes, seconds,millis)
+        return makeTimeString(minutes, seconds, millis)
     }
 
     private fun makeTimeString(minutes: Int, seconds: Int, millis: Int): String {
@@ -110,7 +111,7 @@ class StopWatchFragment : Fragment() {
     }
 
     private fun startStopTimer() {
-        if(timerStarted)
+        if (timerStarted)
             stopTimer()
         else
             startTimer()
@@ -118,8 +119,8 @@ class StopWatchFragment : Fragment() {
 
     private fun startTimer() {
         val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
-        with(sharedPreferences?.edit()){
-            this?.putBoolean("started",true)
+        with(sharedPreferences?.edit()) {
+            this?.putBoolean("started", true)
             this?.apply()
         }
         serviceIntent.putExtra(StopwatchService.TIME_EXTRA, time)
@@ -132,8 +133,8 @@ class StopWatchFragment : Fragment() {
 
     private fun stopTimer() {
         val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
-        with(sharedPreferences?.edit()){
-            this?.putBoolean("started",false)
+        with(sharedPreferences?.edit()) {
+            this?.putBoolean("started", false)
             this?.apply()
         }
         context?.stopService(serviceIntent)

@@ -5,12 +5,9 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.alarmapp.R
-import fragments.StopWatchFragment
-import fragments.TimerFragment
 import notifications.AppNoti
 import java.util.*
 import kotlin.math.roundToInt
@@ -39,9 +36,10 @@ class StopwatchService : Service() {
         super.onDestroy()
     }
 
-    private fun sendNotification(time: Double){
+    private fun sendNotification(time: Double) {
         val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(this, AppNoti.CHANNEL_ID3)
             .setContentTitle("Stopwatch is running")
             .setContentText(updateNotification(time))
@@ -49,15 +47,15 @@ class StopwatchService : Service() {
             .setContentIntent(pendingIntent)
             .setSound(null)
             .build()
-        startForeground(3,notification)
+        startForeground(3, notification)
     }
 
-    private fun updateNotification(time : Double) : String{
+    private fun updateNotification(time: Double): String {
         val resultInt = time.roundToInt()
         val millis = resultInt % 100
         val seconds = resultInt / 100 % 60
         val minutes = resultInt / 100 / 60 % 60
-        return makeTimeString(minutes, seconds,millis)
+        return makeTimeString(minutes, seconds, millis)
     }
 
     private fun makeTimeString(minutes: Int, seconds: Int, millis: Int): String {
@@ -65,8 +63,7 @@ class StopwatchService : Service() {
     }
 
     private inner class TimeTask(private var time: Double) : TimerTask() {
-        override fun run()
-        {
+        override fun run() {
             val intent = Intent(TIMER_UPDATED)
             time++
             intent.putExtra(TIME_EXTRA, time)
