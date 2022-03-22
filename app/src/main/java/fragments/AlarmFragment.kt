@@ -33,7 +33,7 @@ class AlarmFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentAlarmBinding.inflate(inflater, container, false)
         return binding.root
@@ -70,8 +70,6 @@ class AlarmFragment : Fragment() {
         alarmListViewModel.listAlarmLiveData.observe(viewLifecycleOwner, {
             alarmAdapter.listAlarm = it
             alarmAdapter.notifyDataSetChanged()
-
-            Log.d("check", "current list ${it.size}")
         })
 
         //set up recycler view

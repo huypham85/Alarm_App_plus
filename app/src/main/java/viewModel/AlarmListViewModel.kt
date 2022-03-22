@@ -16,12 +16,6 @@ class AlarmListViewModel(application: Application) : ViewModel() {
 
     private val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
     private var alarmRepository: AlarmRepository = AlarmRepository(alarmDao)
-
-    //    var listAlarmLiveData : LiveData<List<Alarm>> = liveData(IO) {
-//        //delay(3000)
-////        alarmRepository.getAlarms.value?.let { emit(it) }
-//        emit(alarmRepository.getAlarms())
-//    }
     private val listAlarms = MutableLiveData<List<Alarm>>()
     var listAlarmLiveData: LiveData<List<Alarm>> = listAlarms
 
@@ -36,24 +30,19 @@ class AlarmListViewModel(application: Application) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             alarmRepository.insert(alarm)
         }.join()
-        //Log.e("list after insert", "${listAlarmLiveData.value?.size}")
-//        Log.e("list size", listAlarm.size.toString())
-//        Log.e("list db size", alarmRepository.liveDataAlarms.value?.size.toString())
-//        Log.e("id viewModel",alarm.id.toString())
-//        Log.e("live list size", _liveListAlarm.value?.size.toString())
     }
 
     fun update(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             alarmRepository.update(alarm)
+//            listAlarms.postValue(alarmRepository.getAlarms())
         }
-
     }
 
     fun delete(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             alarmRepository.delete(alarm)
-            //listAlarmLiveData.value  = alarmRepository.getAlarms()
+            listAlarms.postValue(alarmRepository.getAlarms())
         }
     }
 }

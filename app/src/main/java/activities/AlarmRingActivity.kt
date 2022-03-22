@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.alarmapp.databinding.ActivityAlarmRingBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import model.Alarm
 import model.AlarmDatabase
@@ -69,20 +70,18 @@ class AlarmRingActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun initTimeAndLabel() {
+    private fun initTimeAndLabel() {
         val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
-        var alarmRepository = AlarmRepository(alarmDao)
+        val alarmRepository = AlarmRepository(alarmDao)
         val id = intent.getLongExtra("ID", 0)
         val alarm = alarmRepository.getAlarmWithId(id)
         alarm.isOn = false
-        alarmRepository.update(alarm)
+        GlobalScope.launch {
+            alarmRepository.update(alarm)
+        }
 
         val alarmHour = intent.getIntExtra("HOUR", 0)
         val alarmMinute = intent.getIntExtra("MINUTE", 0)
-
-        Log.e("Hour Ring", intent.getIntExtra("HOUR", 0).toString())
-        Log.e("Minute Ring", intent.getIntExtra("MINUTE", 0).toString())
-
         val alarmTime = String.format("%02d : %02d", alarmHour, alarmMinute)
         binding.txtALarmTime.text = alarmTime
 
