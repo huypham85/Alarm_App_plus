@@ -22,14 +22,11 @@ class StopWatchFragment : Fragment() {
     private var timerStarted = false
     private lateinit var serviceIntent: Intent
     private var time = 0.0
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentStopWatchBinding.inflate(layoutInflater, container, false)
 
         return binding.root
@@ -42,7 +39,6 @@ class StopWatchFragment : Fragment() {
         val sharedPreferences = activity?.getSharedPreferences("stopWatchPref", MODE_PRIVATE)
         val timeRunning = sharedPreferences?.getFloat("timeRunning", 0.0F)
         val lastStarted = sharedPreferences?.getBoolean("started", false)
-        Log.e("Time running", timeRunning.toString())
         if (timeRunning != null && lastStarted == true) { // truoc khi tat app: time van chay va ko bi stop
             if (timeRunning > 0) {
                 binding.txtTime.text = getTimeStringFromDouble(timeRunning.toDouble())
@@ -50,7 +46,6 @@ class StopWatchFragment : Fragment() {
                     broadcastReceiver,
                     IntentFilter(StopwatchService.TIMER_UPDATED)
                 )
-                // serviceIntent.putExtra(StopwatchService.TIME_EXTRA, time)
                 binding.btnStart.text = "Stop"
                 binding.btnStart.background = resources.getDrawable(R.drawable.stop_round_button)
                 timerStarted = true
@@ -65,11 +60,8 @@ class StopWatchFragment : Fragment() {
             startStopTimer()
         }
         binding.btnReset.setOnClickListener {
-            //Toast.makeText(context,"Reset", Toast.LENGTH_LONG).show()
             resetTimer()
         }
-        //LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, IntentFilter(StopwatchService.TIMER_UPDATED))
-
     }
 
     override fun onResume() {

@@ -7,12 +7,11 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.os.IBinder
-import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.alarmapp.R
-import notifications.AppNoti.Companion.CHANNEL_ID2
+import notifications.AppNotification.Companion.CHANNEL_ID2
 
 class TimerService : Service() {
 
@@ -44,11 +43,8 @@ class TimerService : Service() {
             stopForeground(true)
             stopSelf()
         } else {
-            Log.e("Timer service", "On start command")
             startTimer(intent)
         }
-
-
         return START_STICKY
     }
 
@@ -115,11 +111,6 @@ class TimerService : Service() {
         ) + ":" + String.format("%02d", second))
 
     }
-//
-//    fun finishTimer(){
-//        Log.e("Finish Timer", "On")
-//        countDownTimer.cancel()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

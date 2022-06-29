@@ -43,14 +43,9 @@ class TimerFragment : Fragment() {
         val timeLeft = sharedPreferences?.getLong("time left", 0)
         val lastActive = sharedPreferences?.getBoolean("active", false)
         var isActive = false
-        Log.e("Time left", timeLeft.toString())
-        Log.e("Last active", lastActive.toString())
         // cac truong hop khi mo lai app
-        if (timeLeft != null) {
-            Log.e("Here", "alo")
-            // khi tat app va timer van dang chay
+        if (timeLeft != null) { // khi tat app va timer van dang chay
             if (timeLeft > 1 && lastActive == true) {
-                Log.e("sau khi bat lai app", lastActive.toString())
                 isActive = true
                 with(sharedPreferences.edit()) {
                     this?.putBoolean("active", isActive)
@@ -62,7 +57,6 @@ class TimerFragment : Fragment() {
                 binding.timePicker.visibility = View.GONE
                 binding.timeLeftLayout.visibility = View.VISIBLE
                 binding.progressBar.max = sharedPreferences.getInt("progress max", 0)
-                Log.e("max progress", binding.progressBar.max.toString())
                 val hour = timeLeft / 3600
                 val minute = timeLeft / 60 % 60
                 val second = timeLeft % 60
@@ -75,7 +69,6 @@ class TimerFragment : Fragment() {
             }
             // khi pause timer va tat app
             else if (timeLeft > 1 && lastActive == false) {
-                Log.e("sau khi bat lai app", lastActive.toString())
                 binding.btnPause.text = "Resume"
                 binding.btnStart.isEnabled = false
                 binding.btnPause.isEnabled = true
@@ -120,7 +113,6 @@ class TimerFragment : Fragment() {
                 this?.apply()
             }
             sharedPreferences?.edit()?.putBoolean("active", true)?.apply()
-            Log.e("active after start", sharedPreferences?.getBoolean("active", false).toString())
             val intent = Intent(context, TimerService::class.java)
             intent.putExtra("New time", setNewTime(0, minute, hour))
             context?.startService(intent)
@@ -205,7 +197,6 @@ class TimerFragment : Fragment() {
 
     private var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            //intent?.let { updateUI(it) }
             if (intent != null) {
                 if (TimerService.COUNTDOWN == intent.action) {
                     updateUI(intent)

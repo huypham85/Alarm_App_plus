@@ -14,15 +14,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.alarmapp.R
-import notifications.AppNoti.Companion.CHANNEL_ID
+import notifications.AppNotification.Companion.CHANNEL_ID
 
 class AlarmService : Service() {
     private lateinit var mediaPlayer: MediaPlayer // nhac bao thuc
     private lateinit var vibrator: Vibrator // rung cho bao thuc
-
-    companion object {
-        const val ALARM = "alarmText"
-    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null

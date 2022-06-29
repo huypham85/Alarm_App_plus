@@ -8,7 +8,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.alarmapp.R
-import notifications.AppNoti
+import notifications.AppNotification
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -40,7 +40,7 @@ class StopwatchService : Service() {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val notification = NotificationCompat.Builder(this, AppNoti.CHANNEL_ID3)
+        val notification = NotificationCompat.Builder(this, AppNotification.CHANNEL_ID3)
             .setContentTitle("Stopwatch is running")
             .setContentText(updateNotification(time))
             .setSmallIcon(R.drawable.ic_stopwatch)

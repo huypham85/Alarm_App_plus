@@ -6,15 +6,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.alarmapp.databinding.ActivityAlarmRingBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import model.Alarm
-import model.AlarmDatabase
-import model.AlarmRepository
 import service.AlarmService
 import java.util.*
 
+@AndroidEntryPoint
 class AlarmRingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAlarmRingBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,16 +23,13 @@ class AlarmRingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val intent = Intent(applicationContext, AlarmService::class.java)
-        //LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter(AlarmService.ALARM))
 
         lifecycleScope.launch(Dispatchers.IO) {
             initTimeAndLabel()
         }
 
-
         // onClick
         binding.btnStop.setOnClickListener { // if stop, stop service => stop Alarm
-            //val intent = Intent(applicationContext, AlarmService::class.java)
             applicationContext.stopService(intent)
             finish() // tat activity
         }
@@ -71,15 +67,6 @@ class AlarmRingActivity : AppCompatActivity() {
 
 
     private fun initTimeAndLabel() {
-        val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
-        val alarmRepository = AlarmRepository(alarmDao)
-        val id = intent.getLongExtra("ID", 0)
-        val alarm = alarmRepository.getAlarmWithId(id)
-        alarm.isOn = false
-        GlobalScope.launch {
-            alarmRepository.update(alarm)
-        }
-
         val alarmHour = intent.getIntExtra("HOUR", 0)
         val alarmMinute = intent.getIntExtra("MINUTE", 0)
         val alarmTime = String.format("%02d : %02d", alarmHour, alarmMinute)

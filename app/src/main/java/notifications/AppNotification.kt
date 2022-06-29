@@ -4,8 +4,10 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import dagger.hilt.android.HiltAndroidApp
 
-class AppNoti : Application() {
+@HiltAndroidApp
+class AppNotification : Application() {
     companion object {
         const val CHANNEL_ID = "ALARM CHANNEL"
         const val CHANNEL_ID2 = "TIMER CHANNEL"
@@ -23,7 +25,7 @@ class AppNoti : Application() {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Alarm Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
             val channel2 = NotificationChannel(
                 CHANNEL_ID2,
