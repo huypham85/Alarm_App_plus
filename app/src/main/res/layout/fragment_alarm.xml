@@ -20,11 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bar"
-            app:title="Alarm"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            app:titleTextColor="@color/white"
-            app:titleMarginStart="180dp"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                />
+        </androidx.appcompat.widget.Toolbar>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

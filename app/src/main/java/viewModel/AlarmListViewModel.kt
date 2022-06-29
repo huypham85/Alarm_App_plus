@@ -1,59 +1,39 @@
 package viewModel
 
-import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import model.Alarm
-import model.AlarmDatabase
 import model.AlarmRepository
+import javax.inject.Inject
 
-class AlarmListViewModel(application: Application) : ViewModel() {
-
-    private val alarmDao = AlarmDatabase.getInstance(application).alarmDao()
-    private var alarmRepository: AlarmRepository = AlarmRepository(alarmDao)
-
-    //    var listAlarmLiveData : LiveData<List<Alarm>> = liveData(IO) {
-//        //delay(3000)
-////        alarmRepository.getAlarms.value?.let { emit(it) }
-//        emit(alarmRepository.getAlarms())
-//    }
-    private val listAlarms = MutableLiveData<List<Alarm>>()
-    var listAlarmLiveData: LiveData<List<Alarm>> = listAlarms
+@HiltViewModel
+class AlarmListViewModel @Inject constructor(private val alarmRepository: AlarmRepository) :
+    ViewModel() {
+    private var _listAlarms = MutableLiveData<List<Alarm>>()
+    var listAlarms: LiveData<List<Alarm>> = _listAlarms
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            listAlarms.postValue(alarmRepository.getAlarms())
+            _listAlarms.postValue(alarmRepository.getAlarms())
         }
-    }
-
-    suspend fun insert(alarm: Alarm) {
-        Log.e("View model", "insert")
-        viewModelScope.launch(Dispatchers.IO) {
-            alarmRepository.insert(alarm)
-        }.join()
-        //Log.e("list after insert", "${listAlarmLiveData.value?.size}")
-//        Log.e("list size", listAlarm.size.toString())
-//        Log.e("list db size", alarmRepository.liveDataAlarms.value?.size.toString())
-//        Log.e("id viewModel",alarm.id.toString())
-//        Log.e("live list size", _liveListAlarm.value?.size.toString())
     }
 
     fun update(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             alarmRepository.update(alarm)
+//            listAlarms.postValue(alarmRepository.getAlarms())
         }
-
     }
 
     fun delete(alarm: Alarm) {
         viewModelScope.launch(Dispatchers.IO) {
             alarmRepository.delete(alarm)
-            //listAlarmLiveData.value  = alarmRepository.getAlarms()
+            _listAlarms.postValue(alarmRepository.getAlarms())
         }
     }
 }

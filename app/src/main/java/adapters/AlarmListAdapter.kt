@@ -37,24 +37,17 @@ class AlarmListAdapter(
                 Log.e("Alarm status", alarm.isOn.toString())
                 binding.itemAlarmSwitch.isChecked = alarm.isOn
 
-                binding.itemAlarmSwitch.setOnCheckedChangeListener { _: CompoundButton, bool: Boolean ->
+                binding.itemAlarmSwitch.setOnCheckedChangeListener { _: CompoundButton, _: Boolean ->
                     onToggle(alarm)
                     //alarm.isOn = bool
                     Log.e("Alarm status after switch", alarm.isOn.toString())
                 }
             }
         }
-
-        fun setOnToggle(alarm: Alarm) {
-//            binding.itemAlarmSwitch.setOnCheckedChangeListener { _: CompoundButton, bool: Boolean ->
-//                alarm.isOn = bool
-//                onToggle(alarm)
-//            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
-        var binding = AlarmItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = AlarmItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AlarmViewHolder(binding)
     }
 
@@ -62,7 +55,6 @@ class AlarmListAdapter(
         val alarm = listAlarm[position]
         holder.apply {
             bind(alarm)
-            setOnToggle(alarm)
         }
         viewBinderHelper.bind(holder.itemLayout, alarm.id.toString())
         holder.layoutDelete.setOnClickListener {

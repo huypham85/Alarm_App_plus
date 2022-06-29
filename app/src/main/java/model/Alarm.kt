@@ -23,9 +23,9 @@ data class Alarm(
     var saturday: Boolean,
     var sunday: Boolean,
     var label: String,
-    var isOn: Boolean, // de set trang thai cho switch
-    var timeCreated: Long, // dung de ghi lai thoi gian tao bao thuc, dung de sort trong db
-    @PrimaryKey var id: Long  // dung de danh dau bao thuc => huy bao thuc dua vao id
+    var isOn: Boolean,
+    var timeCreated: Long,
+    @PrimaryKey var id: Long
 ) {
 
     fun schedule(context: Context) { // ham nay dung de tao bao thuc (core function)
@@ -81,7 +81,6 @@ data class Alarm(
         }
         Log.e("id schedule", id.toString())
         Log.e("schedule pending intent", pendingIntent.toString())
-        //Log.e("Thread schedule", Thread.currentThread().name)
         Log.e("Schedule Alarm context", context.toString())
         this.isOn = true
     }

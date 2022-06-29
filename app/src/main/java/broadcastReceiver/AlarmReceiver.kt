@@ -12,9 +12,6 @@ import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Log.e("on receive", "Hello")
-        //khi tat nguon dt, tat ca service se bi mat, vi vay can check khi nao dt dc bat tro lai, khi do broadcast ACTION_BOOT_COMPLETED se duoc gui vao receiver,
-        //ta co the dung broadcast do de bat lai cac bao thuc truoc do tu Room
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             Toast.makeText(context, "Alarm is rescheduled", Toast.LENGTH_LONG).show()
             startRescheduleAlarmService(context)

@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="fragments.AddAlarmFragment"
     android:background="@color/black"
-    android:id="@+id/addAlarmLayout"
-    >
+    tools:context="fragments.AddAlarmFragment">
 
     <TextView
         android:id="@+id/txtSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:text="Save"
         android:textColor="@color/orange"
         android:textSize="25dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtCancel"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="Cancel"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:text="Cancel"
         android:textColor="@color/orange"
         android:textSize="25dp"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -49,14 +47,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:hint="Label"
         android:id="@+id/edtAlarmLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:hint="Label"
         android:singleLine="true"
-        android:textColorHint="#8C8A8A"
         android:textColor="@color/white"
+        android:textColorHint="#8C8A8A"
         android:textSize="18dp"
         app:layout_constraintTop_toBottomOf="@id/timePicker"
         tools:layout_editor_absoluteX="20dp" />
@@ -66,14 +64,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:button="@null"
         android:checked="false"
-        android:textColor="@color/white"
-        android:drawableLeft="@drawable/custom_checkbox"
-        android:drawablePadding="-370dp"
-        android:paddingLeft="350dp"
         android:text="Repeat"
-        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/edtAlarmLabel"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -81,127 +75,99 @@
         android:id="@+id/recurLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/black"
+        android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp"
+        android:weightSum="12"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="10dp"
-        android:weightSum="12"
-        android:gravity="center"
-        android:padding="20dp"
-        android:background="@color/black"
-        android:visibility="gone">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/btnDoneRecur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done"
             android:layout_gravity="right"
-            android:textColor="@color/orange"
-            android:textSize="25dp"
             android:layout_marginBottom="70dp"
-            />
+            android:text="Done"
+            android:textColor="@color/orange"
+            android:textSize="25dp" />
 
         <CheckBox
             android:id="@+id/checkMon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Monday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"
-            />
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="Monday"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <CheckBox
             android:id="@+id/checkTue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tuesday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="Tuesday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <CheckBox
             android:id="@+id/checkWed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wednesday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:text="Wednesday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <CheckBox
             android:id="@+id/checkThu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thursday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:text="Thursday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <CheckBox
             android:id="@+id/checkFri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Friday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:text="Friday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <CheckBox
             android:id="@+id/checkSat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Saturday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:text="Saturday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <CheckBox
             android:id="@+id/checkSun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sunday"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:layout_weight="1"
             android:layout_gravity="left"
-            android:button="@null"
-            android:drawableLeft="@drawable/custom_checkbox"
-            android:drawablePadding="-360dp"
-            android:paddingLeft="350dp"/>
+            android:layout_weight="1"
+            android:text="Sunday"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
     </LinearLayout>
 
