@@ -18,9 +18,9 @@ class AlarmRingViewModel @Inject constructor(private val repository: AlarmReposi
         }
     }
 
-    fun updateAlarmSwitch(id: Long) {
-        val alarm = repository.getAlarmWithId(id)
-        alarm.isOn = false
-        update(alarm)
-    }
+//    fun updateAlarmSwitch(id: Long) {
+//        val alarm = repository.getAlarmWithId(id)
+//        alarm.isOn = false
+//        update(alarm)
+//    }
 }

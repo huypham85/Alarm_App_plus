@@ -11,7 +11,7 @@ interface AlarmRepository {
 
     suspend fun delete(alarm: Alarm)
 
-    fun getAlarmWithId(id: Long): Alarm
+    suspend fun getAlarmWithId(id: Long): Alarm
 }
 
 class AlarmRepositoryImpl @Inject constructor(private val alarmDao: AlarmDao) : AlarmRepository {
@@ -29,7 +29,7 @@ class AlarmRepositoryImpl @Inject constructor(private val alarmDao: AlarmDao) : 
         alarmDao.deleteAlarm(alarm)
     }
 
-    override fun getAlarmWithId(id: Long): Alarm {
+    override suspend fun getAlarmWithId(id: Long): Alarm {
         return alarmDao.getAlarmWithId(id)
     }
 }

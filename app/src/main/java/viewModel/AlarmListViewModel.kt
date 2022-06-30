@@ -18,6 +18,10 @@ class AlarmListViewModel @Inject constructor(private val alarmRepository: AlarmR
     var listAlarms: LiveData<List<Alarm>> = _listAlarms
 
     init {
+       getData()
+    }
+
+    fun getData(){
         viewModelScope.launch(Dispatchers.IO) {
             _listAlarms.postValue(alarmRepository.getAlarms())
         }

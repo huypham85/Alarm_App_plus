@@ -71,5 +71,9 @@ class AlarmFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getData()
+    }
 }
 

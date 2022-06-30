@@ -3,6 +3,7 @@ package service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,7 +11,8 @@ import model.Alarm
 import model.AlarmRepository
 import javax.inject.Inject
 
-class RescheduleAlarmService:
+@AndroidEntryPoint
+class RescheduleAlarmService :
     Service() {
     @Inject
     lateinit var alarmRepository: AlarmRepository

@@ -1,5 +1,6 @@
 package model
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -28,30 +29,32 @@ data class Alarm(
     @PrimaryKey var id: Long
 ) {
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun schedule(context: Context) { // ham nay dung de tao bao thuc (core function)
         Log.e("ALarm", "schedule")
         // dung alarmManager de gui 1 broadcast tu he thong alarm cua dien thoai
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         //khoi tao 1 intent de gui broadcast do den receiver va xu li trong do
-        val intent = Intent(context, AlarmReceiver::class.java)
-        intent.putExtra("HOUR", hour)
-        intent.putExtra("MINUTE", minute)
-        intent.putExtra("RECURRING", recurring)
-        intent.putExtra("MONDAY", monday)
-        intent.putExtra("TUESDAY", tuesday)
-        intent.putExtra("WEDNESDAY", wednesday)
-        intent.putExtra("THURSDAY", thursday)
-        intent.putExtra("FRIDAY", friday)
-        intent.putExtra("SATURDAY", saturday)
-        intent.putExtra("SUNDAY", sunday)
-        intent.putExtra("LABEL", label)
-        intent.putExtra("ID", id)
-        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it.toInt(), intent, 0) };
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("HOUR", hour)
+            putExtra("MINUTE", minute)
+            putExtra("RECURRING", recurring)
+            putExtra("MONDAY", monday)
+            putExtra("TUESDAY", tuesday)
+            putExtra("WEDNESDAY", wednesday)
+            putExtra("THURSDAY", thursday)
+            putExtra("FRIDAY", friday)
+            putExtra("SATURDAY", saturday)
+            putExtra("SUNDAY", sunday)
+            putExtra("LABEL", label)
+            putExtra("ID", id)
+        }
+        val pendingIntent = id.let { PendingIntent.getBroadcast(context, it.toInt(), intent, 0) }
 
         // lay thoi tu time picker
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = System.currentTimeMillis();
+        calendar.timeInMillis = System.currentTimeMillis()
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
@@ -85,6 +88,7 @@ data class Alarm(
         this.isOn = true
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun cancelAlarm(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
